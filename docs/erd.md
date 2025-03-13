@@ -59,7 +59,7 @@ erDiagram
         int assessment_id PK
         int module_id FK
         int student_id FK
-        int submissions_id FK
+        %% int submissions_id FK
         float grade
         float expected_grade
         date deadline_date
