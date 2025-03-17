@@ -66,7 +66,7 @@ insert into reviews (student_id, course_id, rating, comment, review_date) values
   (9,2,5.0, 'Amazing', '2025-03-11'),
   (10,3,2.5, 'Frustrating', '2025-03-11');
 
-INSERT INTO enrollments(student_id, course_id, enrollment_date, last_login_date, active) VALUES
+INSERT INTO enrollments(student_id, course_id, last_login_date, enrollment_date, active) VALUES
   ('1', '1', '2024-04-10', '2025-03-10', true),
   ('2', '3', '2024-07-08', '2025-03-10', true),
   ('3', '3', '2024-01-06', '2025-03-10', true),
@@ -110,3 +110,34 @@ VALUES
 (3, 3, '2023-02-25'),
 (3, 4, '2023-03-10'),
 (3, 4, '2023-03-25');
+
+
+-- Queries
+-- 1. Which courses have the most students enrolled this month?
+SELECT * 
+FROM COURSES
+    LEFT JOIN ENROLLMENTS ON COURSES.course_id = ENROLLMENTS.course_id 
+    WHERE enrollment_date BETWEEN '2024-01-01' AND '2024-12-31'
+    COUNT (course_id) AS total_enrolled 
+    order by total_enrolled DESC;
+
+-- 2. What are the top 5 trending courses based on enrollment growth over the last 3 months?
+
+-- SELECT course_id, enrollment_date, COUNT(*) AS enrollment_count
+-- FROM ENROLLMENTS
+-- WHERE enrollment_date BETWEEN '2024-01-01' AND '2024-12-31'
+-- ORDER BY enrollment_count DESC
+-- LIMIT 5;
+
+-- 3. Which categories (e.g., Data Science, Programming) have the highest number of enrolled students?
+
+-- SELECT category, COUNT(*) AS total_enrolled
+-- FROM ENROLLMENTS
+-- GROUP BY category
+-- ORDER BY total_enrolled DESC;
+
+
+-- 4. What is the total revenue from Premium subscriptions in the last quarter? (last 3 months)
+
+
+-- 5. What percentage of total revenue comes from subscription payments versus one-time course purchases?
