@@ -114,30 +114,44 @@ VALUES
 
 -- Queries
 -- 1. Which courses have the most students enrolled this month?
-SELECT * 
-FROM COURSES
-    LEFT JOIN ENROLLMENTS ON COURSES.course_id = ENROLLMENTS.course_id 
-    WHERE enrollment_date BETWEEN '2024-01-01' AND '2024-12-31'
-    COUNT (course_id) AS total_enrolled 
-    order by total_enrolled DESC;
+SELECT COURSES.*, COUNT(ENROLLMENTS.course_id) AS total_enrolled
+FROM COURSES 
+LEFT JOIN ENROLLMENTS ON COURSES.course_id = ENROLLMENTS.course_id 
+WHERE ENROLLMENTS.enrollment_date BETWEEN '2024-01-01' AND NOW()
+GROUP BY COURSES.course_id, COURSES.instructor_id, COURSES.title, COURSES.category
+ORDER BY total_enrolled DESC
 
 -- 2. What are the top 5 trending courses based on enrollment growth over the last 3 months?
 
--- SELECT course_id, enrollment_date, COUNT(*) AS enrollment_count
--- FROM ENROLLMENTS
--- WHERE enrollment_date BETWEEN '2024-01-01' AND '2024-12-31'
--- ORDER BY enrollment_count DESC
--- LIMIT 5;
+SELECT course_id, enrollment_date, COUNT(*) AS enrollment_count
+FROM ENROLLMENTS
+WHERE enrollment_date BETWEEN '2024-01-01' AND '2024-12-31'
+ORDER BY enrollment_count DESC
+LIMIT 5;
 
 -- 3. Which categories (e.g., Data Science, Programming) have the highest number of enrolled students?
 
--- SELECT category, COUNT(*) AS total_enrolled
--- FROM ENROLLMENTS
--- GROUP BY category
--- ORDER BY total_enrolled DESC;
+SELECT category, COUNT(*) AS total_enrolled
+FROM ENROLLMENTS
+GROUP BY category
+ORDER BY total_enrolled DESC;
 
 
 -- 4. What is the total revenue from Premium subscriptions in the last quarter? (last 3 months)
 
+SELECT SUM(pr.price) AS total_revenue
+FROM payment_records pr
+JOIN subscriptions s ON pr.subscription_id = s.subscription_id
+WHERE s.type_of_subscription = 'Premium'
+WHERE d_date BETWEEN NOW() AND NOW() - INTERVAL 3 MONTH 
 
 -- 5. What percentage of total revenue comes from subscription payments versus one-time course purchases?
+SELECT 
+    (SUM(CASE WHEN e.enrollment_id IS NULL THEN pr.price ELSE 0 END) / SUM(pr.price)) * 100 AS subscription_percentage,
+    (SUM(CASE WHEN s.subscription_id IS NULL THEN pr.price ELSE 0 END) / SUM(pr.price)) * 100 AS one_time_purchase_percentage
+FROM 
+    payment_records pr
+LEFT JOIN 
+    subscriptions s ON pr.subscription_id = s.subscription_id 
+LEFT JOIN
+    enrollment e ON pr.enrollment_id = e.enrollment_id;

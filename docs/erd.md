@@ -36,7 +36,7 @@ erDiagram
     SUBSCRIPTIONS {
         int subscription_id PK
         int student_id FK
-        int enrollment_id FK
+        int course_id FK
         String type_of_subscription
         date start_date
         date end_date
@@ -90,6 +90,7 @@ erDiagram
     STUDENTS ||--|{ SUBMISSIONS  : "Submit"
     INSTRUCTORS ||--|{ COURSES : "Teach"
     ENROLLMENTS }|--|| COURSES : "Enroll Courses"
+    SUBSCRIPTIONS }|--|| COURSES : "Enroll Courses"
     SUBSCRIPTIONS ||--|| PAYMENT_RECORDS : "Payment"
     ENROLLMENTS ||--|| PAYMENT_RECORDS : "Payment"
     COURSES ||--|{ REVIEWS : "Reviews"

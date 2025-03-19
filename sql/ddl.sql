@@ -28,21 +28,23 @@ CREATE TABLE ENROLLMENTS (
 CREATE TABLE SUBSCRIPTIONS (
     subscription_id SERIAL PRIMARY KEY,
         student_id INT REFERENCES STUDENTS(student_id),
-            enrollment_id INT REFERENCES ENROLLMENTS(enrollment_id),
-                type_of_subscription VARCHAR(50),
-                    start_date DATE,
-                        end_date DATE,
-                            expire_date DATE
-                            );
+        enrollment_id INT REFERENCES ENROLLMENTS(enrollment_id), -- added
+        course_id INT REFERENCES COURSES(course_id), -- added
+        type_of_subscription VARCHAR(50),
+        start_date DATE,
+        end_date DATE,
+        expire_date DATE
+        );
 
 CREATE TABLE PAYMENT_RECORDS (
     payment_id SERIAL PRIMARY KEY,
         student_id INT REFERENCES STUDENTS(student_id),
-            enrollment_id INT REFERENCES ENROLLMENTS(enrollment_id),
-                price DECIMAL(10, 2),
-                    methods VARCHAR(50),
-                        payment_date DATE
-                        );
+        enrollment_id INT REFERENCES ENROLLMENTS(enrollment_id),
+        subscription_id INT REFERENCES SUBSCRIPTIONS(subscription_id),
+        price DECIMAL(10, 2),
+        methods VARCHAR(50),
+        payment_date DATE
+        );
 
 CREATE TABLE MODULES (
     module_id SERIAL PRIMARY KEY,
